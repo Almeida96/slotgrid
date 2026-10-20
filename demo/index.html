@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Select weekly availability, edit time ranges, and export a JSON schedule. A small, reusable web component.">
+  <title>SlotGrid — Weekly availability</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="SlotGrid home"><img src="./icon.svg" alt="" width="30" height="30">SlotGrid<span class="version">0.1.0</span></a>
+    <a class="source-link" href="https://github.com/Almeida96/slotgrid">View on GitHub <span aria-hidden="true">↗</span></a>
+  </header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">WEEKLY AVAILABILITY</p><h1>Set your weekly hours.</h1><p class="lede">Select a few slots. Adjust your week. Take the JSON with you.</p></div><span class="component-tag"><span></span> Web component demo</span></div>
+    <div class="workspace">
+      <section class="calendar-card" aria-labelledby="calendar-title">
+        <div class="card-heading"><div><h2 id="calendar-title">Your schedule</h2><p>Repeats every week</p></div><div class="legend"><span class="legend-dot"></span>Available</div></div>
+        <div class="toolbar">
+          <label>Time zone<select id="timezone"><option value="America/Sao_Paulo">São Paulo</option><option value="UTC">UTC</option><option value="America/New_York">New York</option><option value="Europe/London">London</option><option value="Asia/Tokyo">Tokyo</option></select></label>
+          <label>Slot length<select id="step"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="60">60 min</option></select></label>
+          <div class="edit-actions"><button id="undo" class="text-button" disabled>Undo</button><button id="clear" class="text-button">Clear week</button></div>
+        </div>
+        <slot-grid></slot-grid>
+        <div class="calendar-footer"><span id="storage-status">Saved in this browser</span><span>Times are local to the selected zone.</span></div>
+      </section>
+      <aside aria-label="Schedule summary">
+        <section class="summary-card">
+          <p class="eyebrow">THIS WEEK</p><div class="hours"><strong id="total">0</strong><span>hours available</span></div><p id="day-count" class="day-count">Across 0 days</p>
+          <div id="day-summary" class="day-summary"></div>
+          <button id="download" class="primary-button">Export JSON <span aria-hidden="true">↓</span></button>
+          <button id="edit-json" class="secondary-button">View / import JSON</button>
+        </section>
+        <section class="presets"><h2>Start with a pattern</h2><p>Replace the current week. Undo brings it back.</p><div><button id="workweek">Workweek <span>09–12 · 13–17</span></button><button id="mornings">Mornings <span>09–12</span></button></div></section>
+        <p class="local-note">Your schedule stays in this browser. Export a copy to keep it or use it in another app.</p>
+      </aside>
+    </div>
+    <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+    <footer><span>SlotGrid · A reusable availability picker</span><a href="https://github.com/Almeida96/slotgrid#use-the-component">Use it in your project <span aria-hidden="true">↗</span></a></footer>
+  </main>
+  <dialog id="json-dialog" aria-labelledby="json-title">
+    <div class="dialog-heading"><div><p class="eyebrow">SCHEDULE DATA</p><h2 id="json-title">Your week as JSON</h2></div><button id="close-dialog" class="icon-button" aria-label="Close JSON editor">×</button></div>
+    <p>Edit the schedule below, or paste a previously exported file. Day 1 is Monday and day 7 is Sunday.</p>
+    <label for="json-input" class="sr-only">Schedule JSON</label><textarea id="json-input" spellcheck="false"></textarea>
+    <p id="json-error" class="error" role="alert"></p>
+    <div class="dialog-actions"><button id="copy-json" class="secondary-button">Copy JSON</button><button id="apply-json" class="primary-button">Apply schedule</button></div>
+  </dialog>
+</body>
+</html>

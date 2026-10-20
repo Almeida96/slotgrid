@@ -1,0 +1,49 @@
+{
+  "name": "@almeida96/slotgrid",
+  "version": "0.1.0",
+  "description": "A weekly availability picker with keyboard controls and JSON export.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Igor Almeida",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Almeida96/slotgrid.git"
+  },
+  "homepage": "https://almeida96.github.io/slotgrid/",
+  "bugs": {
+    "url": "https://github.com/Almeida96/slotgrid/issues"
+  },
+  "main": "./dist/slot-grid.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/slot-grid.js"
+    },
+    "./model": {
+      "types": "./dist/model.d.ts",
+      "import": "./dist/model.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": [
+    "./dist/slot-grid.js"
+  ],
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly && node scripts/build.mjs",
+    "check": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
+    "dev": "node scripts/serve.mjs",
+    "pack:check": "node scripts/check-package.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "happy-dom": "21.0.4",
+    "typescript": "7.0.2"
+  }
+}
