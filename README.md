@@ -1,6 +1,6 @@
 # SlotGrid
 
-A weekly availability picker built as a web component. Select time ranges with a mouse or keyboard, merge overlapping slots, and export the result as JSON. No runtime dependencies.
+A `<slot-grid>` web component for editing recurring weekly availability. Schedules use JSON; overlapping ranges merge automatically. No runtime dependencies.
 
 [Try the demo](https://almeida96.github.io/slotgrid/)
 
@@ -18,7 +18,7 @@ pnpm run build
 pnpm run dev
 ```
 
-Open `http://127.0.0.1:4173`. The demo includes presets, undo, JSON import/export, and browser storage. Rebuild after editing the source.
+Open `http://127.0.0.1:4173`. Rebuild after editing the source.
 
 ## Use the component
 
@@ -49,7 +49,9 @@ Copy `dist/slot-grid.js` from a build into your project. Load it as an ES module
 
 The `value` property validates input and returns a detached copy. Assigning it does not emit an event. User edits emit `slotgrid-change` with the complete schedule in `event.detail`; a drag emits once on release. Set `grid.disabled = true` to disable editing.
 
-The component registers `<slot-grid>` when imported and uses Shadow DOM. Import it on the client in apps that render on a server. Types are included in `dist/`. To create a package for installation from a local archive, run `pnpm pack` after building. The package has not been published to npm.
+Importing the module registers `<slot-grid>`, which uses Shadow DOM. In server-rendered apps, import it on the client. Type declarations are in `dist/`.
+
+You can also install the archive from [Releases](https://github.com/Almeida96/slotgrid/releases), or run `pnpm pack` after building to create one. The package is not on npm.
 
 ## Schedule format
 
@@ -64,7 +66,7 @@ The component registers `<slot-grid>` when imported and uses Shadow DOM. Import 
 
 Ranges are half-open: `09:00–10:00` includes 09:00 and ends at 10:00. Boundaries must align to `step`. Overlapping and adjacent ranges on the same day merge automatically. Empty days have no ranges. Overnight availability must be split across two days.
 
-This is a recurring **wall-clock schedule**, not a list of dated appointments. Changing `timeZone` keeps the selected hours. Conversion to specific dates, daylight-saving transitions, holidays, bookings, and conflict checks against external calendars belong to the consuming application.
+Schedules repeat weekly in the selected time zone. Changing `timeZone` keeps the selected hours. Your application must handle dates, daylight-saving changes, holidays, and booking conflicts.
 
 ## Controls
 
@@ -113,14 +115,16 @@ slot-grid {
 pnpm run check
 pnpm run build
 pnpm test
-pnpm pack --out slotgrid-0.1.0.tgz
+pnpm pack --out slotgrid-0.1.1.tgz
 pnpm run pack:check
 ```
 
-Tests cover range normalization, subtraction, invalid input, JSON round trips, keyboard controls, disabled state, and change events. A deterministic randomized test checks range operations against a separate cell model. Component tests use Happy DOM; they do not replace real-browser checks of pointer behavior and layout.
+Tests cover range normalization, subtraction, validation, JSON round trips, keyboard controls, disabled state, and change events. A seeded test compares range operations against a separate cell model. Component tests use Happy DOM; check pointer behavior and layout in a browser.
 
 The GitHub Actions workflow runs checks on Linux, Windows, and macOS. The Pages job deploys the demo after those checks pass on `main`.
 
-The library does not save data or make network requests. The demo stores the last schedule in local storage, keeps up to 30 undo states in memory, and makes no API calls. Data can be lost when browser storage is cleared; use JSON export for a portable copy.
+## Demo storage
+
+The component does not store data or make network requests. The demo saves the last schedule in local storage and keeps up to 30 undo states in memory. Clearing browser storage removes the saved schedule. Export JSON to keep a copy.
 
 MIT license. See [LICENSE](LICENSE).

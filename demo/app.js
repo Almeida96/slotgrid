@@ -74,7 +74,7 @@ for (const id of ['workweek', 'mornings']) {
       { day: i + 1, start: '09:00', end: '12:00' },
       ...(id === 'workweek' ? [{ day: i + 1, start: '13:00', end: '17:00' }] : []),
     ]).flat();
-    commit({ ...current, slots }, 'Pattern applied. Use Undo to restore your previous week.');
+    commit({ ...current, slots }, 'Preset applied. Undo restores the previous schedule.');
   });
 }
 document.querySelector('#download').addEventListener('click', () => {
@@ -94,7 +94,7 @@ document.querySelector('#close-dialog').addEventListener('click', () => dialog.c
 document.querySelector('#apply-json').addEventListener('click', () => {
   try {
     if (input.value.length > 250000) throw new Error('The pasted JSON exceeds the 250 KB text limit.');
-    commit(JSON.parse(input.value), 'Schedule imported. Overlapping and adjacent ranges were merged.');
+    commit(JSON.parse(input.value), 'Schedule imported.');
     dialog.close();
   } catch (error) { document.querySelector('#json-error').textContent = error.message; }
 });

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Shortened the demo instructions and README.
+- Clarified that presets replace the schedule with Monday–Friday hours.
+- Changed the import confirmation to report success without implying ranges were merged.
+
 ## 0.1.0
 
 - Weekly availability grid with mouse, pen, touch, and keyboard controls.
