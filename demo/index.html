@@ -11,7 +11,7 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="./" aria-label="SlotGrid home"><img src="./icon.svg" alt="" width="30" height="30">SlotGrid<span class="version">0.1.1</span></a>
+    <a class="brand" href="./" aria-label="SlotGrid home"><img src="./icon.svg" alt="" width="30" height="30">SlotGrid<span class="version">0.2.0</span></a>
     <a class="source-link" href="https://github.com/Almeida96/slotgrid">View on GitHub <span aria-hidden="true">↗</span></a>
   </header>
   <main>
@@ -35,6 +35,7 @@
           <button id="edit-json" class="secondary-button">View / import JSON</button>
         </section>
         <section class="presets"><h2>Presets</h2><p>Replace your schedule with Monday–Friday hours.</p><div><button id="workweek">Workweek <span>09–12 · 13–17</span></button><button id="mornings">Mornings <span>09–12</span></button></div></section>
+        <section class="presets"><h2>Appointment options</h2><label>Duration<select id="duration"><option value="30">30 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select></label><p id="appointment-count"></p><details><summary>Show start times</summary><pre id="appointment-list"></pre></details><button id="download-appointments" class="secondary-button">Export appointment options</button><p>Alternative start times within your hours. Subtract bookings in the JSON editor first.</p></section>
         <p class="local-note">Export JSON to save a copy outside this browser.</p>
       </aside>
     </div>
@@ -43,10 +44,10 @@
   </main>
   <dialog id="json-dialog" aria-labelledby="json-title">
     <div class="dialog-heading"><div><p class="eyebrow">IMPORT / EXPORT</p><h2 id="json-title">Schedule JSON</h2></div><button id="close-dialog" class="icon-button" aria-label="Close JSON editor">×</button></div>
-    <p>Edit or paste a schedule. Days run from 1 (Monday) to 7 (Sunday).</p>
+    <p>Paste another schedule to replace yours, keep shared hours, or subtract booked hours. Both schedules must use the same time zone. Days run from 1 (Monday) to 7 (Sunday).</p>
     <label for="json-input" class="sr-only">Schedule JSON</label><textarea id="json-input" spellcheck="false"></textarea>
     <p id="json-error" class="error" role="alert"></p>
-    <div class="dialog-actions"><button id="copy-json" class="secondary-button">Copy JSON</button><button id="apply-json" class="primary-button">Apply schedule</button></div>
+    <div class="dialog-actions"><button id="copy-json" class="secondary-button">Copy JSON</button><button id="intersect-json" class="secondary-button">Keep shared hours</button><button id="subtract-json" class="secondary-button">Subtract bookings</button><button id="apply-json" class="primary-button">Replace schedule</button></div>
   </dialog>
 </body>
 </html>

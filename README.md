@@ -6,6 +6,26 @@ A `<slot-grid>` web component for editing recurring weekly availability. Schedul
 
 ![SlotGrid demo with a weekly schedule and JSON export](docs/demo.jpg)
 
+## Find usable appointment times
+
+The model can intersect two schedules, subtract bookings, and enumerate appointments that fit inside the remaining hours. The browser demo exposes these operations in **View / import JSON** and **Appointment options**.
+
+```js
+import { intersectSchedules, subtractSchedules, appointmentSlots } from '@almeida96/slotgrid/model';
+
+const schedule = slots => ({ version: 1, timeZone: 'UTC', step: 30, slots });
+const provider = schedule([{ day: 1, start: '09:00', end: '12:00' }]);
+const client = schedule([{ day: 1, start: '10:00', end: '13:00' }]);
+const bookings = schedule([{ day: 1, start: '10:30', end: '11:00' }]);
+const free = subtractSchedules(intersectSchedules(provider, client), bookings);
+const choices = appointmentSlots(free, 60);
+// [{ day: 1, start: '11:00', end: '12:00' }]
+```
+
+Inputs are copied and normalized. Overlapping bookings do not double-subtract time. Ranges that only touch have no overlap. Different steps use the finer interval. Duration and optional start interval must be positive multiples of that interval; an appointment cannot cross a break. Returned start times are alternatives and can overlap each other.
+
+Schedules must use the same time zone. This is recurring weekly availability, not a date-based booking engine: it does not handle holidays, DST conversion between zones, or reservations. Supply dated bookings in your application and convert them to the correct local weekly ranges before using these helpers.
+
 ## Run locally
 
 Requires Node.js 22+ and pnpm 11.25.0.
@@ -115,7 +135,7 @@ slot-grid {
 pnpm run check
 pnpm run build
 pnpm test
-pnpm pack --out slotgrid-0.1.1.tgz
+pnpm pack --out slotgrid-0.2.0.tgz
 pnpm run pack:check
 ```
 

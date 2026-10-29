@@ -77,3 +77,48 @@ export function setRange(input: Schedule, day: Day, start: string, end: string, 
 export function totalMinutes(input: Schedule): number {
   return normalizeSchedule(input).slots.reduce((total, slot) => total + parseTime(slot.end) - parseTime(slot.start), 0);
 }
+
+function compatible(a: Schedule, b: Schedule): [Schedule, Schedule] {
+  const left = normalizeSchedule(a), right = normalizeSchedule(b);
+  const canonical = (zone: string) => new Intl.DateTimeFormat('en', { timeZone: zone }).resolvedOptions().timeZone;
+  if (canonical(left.timeZone) !== canonical(right.timeZone)) throw new RangeError('Schedules must use the same time zone. Weekly hours cannot be converted without a date.');
+  const step = Math.min(left.step, right.step) as Step;
+  return [{ ...left, step }, { ...right, step }];
+}
+
+/** Find shared weekly hours, preserving the finest input interval. */
+export function intersectSchedules(a: Schedule, b: Schedule): Schedule {
+  const [left, right] = compatible(a, b);
+  const slots: Slot[] = [];
+  let i = 0, j = 0;
+  while (i < left.slots.length && j < right.slots.length) {
+    const x = left.slots[i]!, y = right.slots[j]!;
+    if (x.day < y.day) { i++; continue; }
+    if (y.day < x.day) { j++; continue; }
+    const start = Math.max(parseTime(x.start), parseTime(y.start));
+    const end = Math.min(parseTime(x.end), parseTime(y.end));
+    if (start < end) slots.push({ day: x.day, start: formatTime(start), end: formatTime(end) });
+    if (parseTime(x.end) <= parseTime(y.end)) i++; else j++;
+  }
+  return { ...left, slots };
+}
+
+/** Remove booked hours from availability. Both inputs remain unchanged. */
+export function subtractSchedules(availability: Schedule, bookings: Schedule): Schedule {
+  let [result, blocked] = compatible(availability, bookings);
+  for (const slot of blocked.slots) result = setRange(result, slot.day, slot.start, slot.end, false);
+  return result;
+}
+
+/** Enumerate start times for appointments that fit wholly inside availability. */
+export function appointmentSlots(input: Schedule, duration: number, interval?: number): Slot[] {
+  const schedule = normalizeSchedule(input);
+  const spacing = interval ?? schedule.step;
+  if (!Number.isInteger(duration) || duration <= 0 || duration > 1440 || duration % schedule.step) throw new RangeError('Duration must be a positive multiple of the schedule step, up to 1440 minutes.');
+  if (!Number.isInteger(spacing) || spacing <= 0 || spacing > 1440 || spacing % schedule.step) throw new RangeError('Interval must be a positive multiple of the schedule step, up to 1440 minutes.');
+  return schedule.slots.flatMap(slot => {
+    const result: Slot[] = [];
+    for (let start = parseTime(slot.start); start + duration <= parseTime(slot.end); start += spacing) result.push({ day: slot.day, start: formatTime(start), end: formatTime(start + duration) });
+    return result;
+  });
+}

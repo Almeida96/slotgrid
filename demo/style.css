@@ -6,3 +6,6 @@ dialog{width:min(600px,calc(100% - 32px));border:1px solid var(--border);border-
 @media(min-width:1350px){.topbar,main{max-width:1340px}.workspace{grid-template-columns:minmax(0,1fr) 290px;gap:30px}}
 @media(max-width:950px){.topbar{padding:0 24px}main{padding:27px 24px 0}.workspace{grid-template-columns:minmax(0,1fr)}aside{display:grid;grid-template-columns:1fr 1fr;gap:20px}.local-note{grid-column:2;margin-top:-90px}.component-tag{display:none}.summary-card{grid-row:span 2}.calendar-card{padding:18px}}
 @media(max-width:560px){.topbar{height:68px;padding:0 18px}.source-link{font-size:11px;gap:5px}main{padding:25px 14px 0}h1{font-size:28px}.lede{max-width:280px;line-height:1.6}.intro{margin:0 4px 22px}.calendar-card{padding:15px}.toolbar{flex-wrap:wrap;gap:10px}.edit-actions{padding-bottom:8px;gap:10px}.toolbar select{max-width:130px;padding-right:15px}.calendar-footer{flex-direction:column;gap:5px}aside{display:block}.presets{padding:22px 6px 0}.local-note{margin:0;padding:18px 6px 0}footer{flex-direction:column;gap:10px}.hours strong{font-size:42px}}
+.dialog-actions { flex-wrap: wrap; }
+#appointment-list { max-height: 240px; overflow: auto; font-size: 12px; line-height: 1.7; }
+#duration { display: block; margin-top: 8px; width: 100%; }

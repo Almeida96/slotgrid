@@ -1,4 +1,4 @@
-import { DAYS, normalizeSchedule, totalMinutes } from './dist/slot-grid.js';
+import { DAYS, normalizeSchedule, totalMinutes, intersectSchedules, subtractSchedules, appointmentSlots } from './dist/slot-grid.js';
 
 const grid = document.querySelector('slot-grid');
 const zone = document.querySelector('#timezone');
@@ -43,6 +43,7 @@ function update() {
     row.append(day, times); return row;
   }));
   document.querySelector('#undo').disabled = !history.length;
+  updateAppointments();
   try { localStorage.setItem(storageKey, JSON.stringify(current)); document.querySelector('#storage-status').textContent = 'Saved in this browser'; }
   catch { document.querySelector('#storage-status').textContent = 'Storage unavailable — export to keep changes'; }
 }
@@ -97,6 +98,32 @@ document.querySelector('#apply-json').addEventListener('click', () => {
     commit(JSON.parse(input.value), 'Schedule imported.');
     dialog.close();
   } catch (error) { document.querySelector('#json-error').textContent = error.message; }
+});
+for (const [id, operation, message] of [['intersect-json', intersectSchedules, 'Kept the hours shared by both schedules.'], ['subtract-json', subtractSchedules, 'Removed the booked hours from your availability.']]) {
+  document.querySelector(`#${id}`).addEventListener('click', () => {
+    try {
+      if (input.value.length > 250000) throw new Error('The pasted JSON exceeds the 250 KB text limit.');
+      commit(operation(current, JSON.parse(input.value)), message);
+      dialog.close();
+    } catch (error) { document.querySelector('#json-error').textContent = error.message; }
+  });
+}
+function updateAppointments() {
+  const select = document.querySelector('#duration');
+  for (const option of select.options) option.disabled = Number(option.value) % current.step !== 0;
+  if (Number(select.value) % current.step) select.value = '60';
+  const slots = appointmentSlots(current, Number(select.value));
+  document.querySelector('#appointment-count').textContent = `${slots.length} possible start ${slots.length === 1 ? 'time' : 'times'}`;
+  document.querySelector('#appointment-list').textContent = slots.slice(0, 40).map(slot => `${DAYS[slot.day - 1].slice(0, 3)} ${slot.start}–${slot.end}`).join('\n') + (slots.length > 40 ? '\n… Export to see all start times.' : '');
+  document.querySelector('#download-appointments').disabled = !slots.length;
+}
+document.querySelector('#duration').addEventListener('change', updateAppointments);
+document.querySelector('#download-appointments').addEventListener('click', () => {
+  const data = { timeZone: current.timeZone, duration: Number(document.querySelector('#duration').value), slots: appointmentSlots(current, Number(document.querySelector('#duration').value)) };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2) + '\n'], { type: 'application/json' }));
+  const link = document.createElement('a'); link.href = url; link.download = 'appointment-options.json'; link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  feedback.textContent = 'Appointment options exported. These are alternatives, not confirmed bookings.';
 });
 document.querySelector('#copy-json').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(input.value); document.querySelector('#json-error').textContent = ''; document.querySelector('#copy-json').textContent = 'Copied'; }

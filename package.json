@@ -1,6 +1,6 @@
 {
   "name": "@almeida96/slotgrid",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A weekly availability picker with keyboard controls and JSON export.",
   "type": "module",
   "license": "MIT",
