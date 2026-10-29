@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-28
+
+Intersect weekly availability, subtract bookings, and export possible appointment start times.
+
 ## 0.1.1
 
 - Shortened the demo instructions and README.
