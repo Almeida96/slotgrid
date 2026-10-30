@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+Build the distribution as part of the test command so a fresh checkout does not fail on missing dist modules.
+
 ## 0.2.0 — 2026-10-28
 
 Intersect weekly availability, subtract bookings, and export possible appointment start times.

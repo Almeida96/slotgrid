@@ -37,7 +37,7 @@
   "scripts": {
     "build": "tsc --emitDeclarationOnly && node scripts/build.mjs",
     "check": "tsc --noEmit",
-    "test": "node --test test/*.test.mjs",
+    "test": "node --run build && node --test test/*.test.mjs",
     "dev": "node scripts/serve.mjs",
     "pack:check": "node scripts/check-package.mjs"
   },

@@ -1,5 +1,7 @@
 # SlotGrid
 
+[![CI](https://github.com/Almeida96/slotgrid/actions/workflows/ci.yml/badge.svg)](https://github.com/Almeida96/slotgrid/actions/workflows/ci.yml)
+
 A `<slot-grid>` web component for editing recurring weekly availability. Schedules use JSON; overlapping ranges merge automatically. No runtime dependencies.
 
 [Try the demo](https://almeida96.github.io/slotgrid/)
@@ -141,7 +143,7 @@ pnpm run pack:check
 
 Tests cover range normalization, subtraction, validation, JSON round trips, keyboard controls, disabled state, and change events. A seeded test compares range operations against a separate cell model. Component tests use Happy DOM; check pointer behavior and layout in a browser.
 
-The GitHub Actions workflow runs checks on Linux, Windows, and macOS. The Pages job deploys the demo after those checks pass on `main`.
+The test command builds the distribution first, so it works from a fresh checkout. The GitHub Actions workflow runs checks on Linux, Windows, and macOS. The Pages job deploys the demo after those checks pass on `main`.
 
 ## Demo storage
 
