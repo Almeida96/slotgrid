@@ -78,6 +78,22 @@ test('setting a value before insertion is preserved on connection', () => {
   assert.equal(cell(grid, 1, 600).getAttribute('aria-selected'), 'true');
 });
 
+test('connection upgrades an own disabled property and restores its setter', () => {
+  const grid = document.createElement('slot-grid');
+  // An assignment made before custom-element registration creates an own property.
+  Object.defineProperty(grid, 'disabled', { value: true, writable: true, configurable: true });
+  document.body.replaceChildren(grid);
+  assert.equal(grid.hasAttribute('disabled'), true);
+  assert.equal(Object.hasOwn(grid, 'disabled'), false);
+  assert.equal(cell(grid, 1, 480).disabled, true);
+  cell(grid, 1, 480).click();
+  assert.deepEqual(grid.value.slots, []);
+  grid.disabled = false;
+  assert.equal(cell(grid, 1, 480).disabled, false);
+  cell(grid, 1, 480).click();
+  assert.equal(grid.value.slots.length, 1);
+});
+
 function pointerFixture() {
   const grid = fixture();
   let captured = false;

@@ -53,6 +53,11 @@ export class SlotGridElement extends HTMLElement {
       delete (this as Partial<SlotGridElement>).value;
       this.value = value;
     }
+    if (Object.prototype.hasOwnProperty.call(this, 'disabled')) {
+      const disabled = this.disabled;
+      delete (this as Partial<SlotGridElement>).disabled;
+      this.disabled = disabled;
+    }
     this.render();
   }
 

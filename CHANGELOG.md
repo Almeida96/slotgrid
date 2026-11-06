@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Upgrade a `disabled` property assigned before custom-element registration so later property updates still enable and disable editing.
+
 Build the distribution as part of the test command so a fresh checkout does not fail on missing dist modules.
 
 ## 0.2.0 — 2026-10-28
